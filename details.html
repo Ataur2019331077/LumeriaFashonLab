@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Additional styles for the variant images */
+        .variant-image {
+            width: 100px;
+            height: auto;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .variant-image:hover {
+            transform: scale(1.1);
+        }
+
+        .selected-variant {
+            border: 2px solid blue;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <!-- Large image -->
+    <div class="p-4 bg-white rounded-lg shadow-md">
+        <img id="large-image" src="" alt="Large Image" class="w-1/3 h-auto rounded-md">
+        <div class="mt-4 text-gray-700 text-center font-bold">Buy</div>
+    </div>
+
+    <!-- Variant images -->
+    <div class="flex justify-center mt-8 space-x-4" id="variant-images">
+        
+    </div>
+
+    <script>
+        function changeImage(variant) {
+            // Get the image name from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const imageName = urlParams.get('image');
+
+            if (imageName) {
+                // Construct the variant image name
+                const variantImageName = imageName.replace('.jpg', '_' + variant + '.jpg');
+                // Set the src attribute of the large image to the variant image
+                document.getElementById('large-image').src = 'images/' + variantImageName;
+
+                // Remove border from previously selected variant image
+                const variantImages = document.querySelectorAll('.variant-image');
+                variantImages.forEach(img => img.classList.remove('selected-variant'));
+
+                // Add border to the clicked variant image
+                const selectedVariantImage = document.querySelector('.variant-image[alt="' + variant + '"]');
+                selectedVariantImage.classList.add('selected-variant');
+            }
+        }
+
+        // Function to dynamically add variant images
+        function addVariantImage(imageName, variant) {
+            const variantImagesContainer = document.getElementById('variant-images');
+            const img = document.createElement('img');
+            img.src = 'images/' + imageName.replace('.jpg', '_' + variant + '.jpg');
+            img.alt = variant;
+            img.className = 'variant-image';
+            img.onclick = function() {
+                changeImage(variant);
+            };
+            variantImagesContainer.appendChild(img);
+        }
+
+        // Extract the image name from the URL and set the large image source
+        const urlParams = new URLSearchParams(window.location.search);
+        const imageName = urlParams.get('image');
+        if (imageName) {
+            document.getElementById('large-image').src = 'images/' + imageName;
+
+            // Add variant images dynamically
+            addVariantImage(imageName, 'var1');
+            addVariantImage(imageName, 'var2');
+            // Add more variant images as needed
+        }
+    </script>
+</body>
+</html>
